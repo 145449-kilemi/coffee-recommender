@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Equipment Recommender Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            height: 100vh;
+        }
+        .main-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .main-content img {
+            max-width: 70%;
+            margin-top: 20px;
+        }
+        .equipment-item {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .equipment-item img {
+            max-width: 100%;  
+            height: 200px;    
+            object-fit: cover; 
+        }
+        .description {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .features {
+            padding: 20px;
+            background-color: #f4f4f4b7;
+            border-left: 1px solid #ccc;
+        }
+        .header {
+            background-color: #05020a;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            display: inline;
+        }
+        .search-bar {
+            float: right;
+        }
+        .chart-container {
+            margin-top: 30px;
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+    <!-- Include Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>Coffee Equipment Recommender</h1>
+    <div class="search-bar">
+        <!-- Add a form element -->
+        <form action="{{ url_for('search') }}" method="POST" class="d-inline-block">
+            <input type="text" id="searchInput" name="search_query" placeholder="Search equipment..." class="form-control d-inline-block" style="width: 300px;">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 sidebar">
+            <h4>Categories</h4>
+            <ul id="categories" class="list-group">
+                <li class="list-group-item" onclick="showCategory('brewing')">Coffee Brewing</li>
+                <li class="list-group-item" onclick="showCategory('grinding')">Grinding Equipment</li>
+                <li class="list-group-item" onclick="showCategory('milk_and_steaming_tools')">Milk and Steaming Tools</li>
+                <li class="list-group-item" onclick="showCategory('water_management')">Water Management</li>
+                <li class="list-group-item" onclick="showCategory('tamping_and_measuring_tools')">Tamping and Measuring Tools</li>
+                <li class="list-group-item" onclick="showCategory('serving_and_accessories')">Serving and Accessories</li>
+                <li class="list-group-item" onclick="showCategory('cleaning_and_maintenance')">Cleaning and Maintenance</li>
+                <li class="list-group-item" onclick="showCategory('cold_beverage_and_miscellaneous')">Cold Beverage and Miscellaneous Equipment</li>
+                <li class="list-group-item" onclick="showCategory('pos_and_shop_operations')">Shop Operations</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content: Equipment Display -->
+        <div class="col-md-7 main-content">
+            <div id="equipment-display" class="row">
+                <!-- Equipment content will be loaded dynamically -->
+            </div>
+            <!-- Chart section -->
+            <div class="chart-container">
+                <canvas id="equipmentChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Features: Equipment Details -->
+        <div class="col-md-3 features">
+            <h4>Features</h4>
+            <ul>
+                <li><strong>Name:</strong> <span id="feature-name"></span></li>
+                <li><strong>EquipmentID:</strong> <span id="feature-id"></span></li>
+                <li><strong>Brand:</strong> <span id="feature-brand"></span></li>
+                <li><strong>Specification:</strong> <span id="feature-spec"></span></li>
+                <li><strong>Image:</strong> <img id="feature-image" width="150px" alt="Equipment Image"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Recommendations Section -->
+
+
+<!-- Main Equipment Display Section -->
+<div id="equipment-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+    {% for item in equipment %}
+        <div class="equipment-item" style="text-align: center; border: 1px solid #ddd; padding: 10px;">
+            <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.Name }}" width="150">
+            <h3>{{ item.Name }}</h3>
+            <p>Price: ${{ item.price }} USD</p>
+            <p>{{ item.description }}</p>
+            <a href="{{ url_for('suggestions', item_name=item.Name) }}">Get Recommendations</a>
+        </div>
+    {% endfor %}
+</div>
+
+
+
+    <!-- Display recommendations only if an item_name is provided -->
+    <!-- Recommendations Section -->
+{% if item_name %}
+<h2>Recommendations for {{ item_name }}</h2>
+<div class="recommendations">
+    {% for item in recommendations %}
+        <div class="recommendation-item">
+            <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.name }}" width="150">
+            <h3>{{ item.name }}</h3>
+            <p>Price: ${{ item.price }} USD</p>
+            <p>{{ item.description }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+    
+
+
+<script>
+// Declare myChart globally
+let myChart = null;
+
+// JavaScript to dynamically update category and features
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listener for search input
+    document.getElementById('searchInput').addEventListener('input', searchEquipment);
+    // Fetch and display chart data on load
+    updateChart();
+});
+
+function searchEquipment() {
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+    const equipmentItems = document.querySelectorAll('.equipment-item');
+
+    equipmentItems.forEach(item => {
+        const itemName = item.querySelector('.description').innerText.toLowerCase();
+        if (itemName.includes(searchQuery)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function showCategory(category) {
+    const equipmentDisplay = document.getElementById('equipment-display');
+    equipmentDisplay.innerHTML = ''; 
+
+    fetch(`/equipment/${category}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.length > 0) {
+            data.forEach(item => {
+                const equipmentItem = `
+                    <div class="col-md-6 equipment-item">
+                        <img src="/static/${item['Image Path']}" alt="${item['Name']}">
+                        <div class="description">${item['Name']} <br> Price: $${item['Price']} USD<br>
+                        <button class="btn btn-primary btn-sm" onclick="showFeatures('${item['Name']}', '${item['EquipmentID']}', '${item['Brand']}', '${item['Specification']}', '${item['Image Path']}')">Description</button></div>
+                    </div>`;
+                equipmentDisplay.innerHTML += equipmentItem;
+            });
+        } else {
+            equipmentDisplay.innerHTML = '<p>No equipment found for this category.</p>';
+        }
+        updateChart();
+    })
+    .catch(error => {
+        console.error('Error fetching equipment:', error);
+    });
+}
+
+function showFeatures(name, id, brand, spec, image) {
+    document.getElementById('feature-name').innerText = name;
+    document.getElementById('feature-id').innerText = id;
+    document.getElementById('feature-brand').innerText = brand;
+    document.getElementById('feature-spec').innerText = spec;
+
+    const imagePath = '/static/' + image;  // Ensure this path is correct
+    document.getElementById('feature-image').src = imagePath;
+
+    // Fetch recommendations for the selected item
+    fetch(`/recommend/${name}`)
+        .then(response => response.json())
+        .then(data => {
+            const recommendationsList = document.getElementById('recommendations-list');
+            recommendationsList.innerHTML = ''; // Clear previous recommendations
+
+            if (data.length > 0) {
+                data.forEach(rec => {
+                    const listItem = `<li>${rec['consequents']} (Confidence: ${rec['confidence']}, Lift: ${rec['lift']})</li>`;
+                    recommendationsList.innerHTML += listItem;
+                });
+            } else {
+                recommendationsList.innerHTML = '<li>No recommendations available.</li>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching recommendations:', error);
+        });
+}
+
+// Function to update and re-render the chart
+function updateChart() {
+    const ctx = document.getElementById('equipmentChart').getContext('2d');
+
+    // Fetch chart data from backend
+    fetch('/api/popular_equipment')
+    .then(response => response.json())
+    .then(data => {
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+
+        // Destroy the previous chart instance if it exists
+       
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        // Create a new chart instance
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Popular Equipment',
+                    data: values,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(199, 255, 236, 0.2)',
+                        'rgba(144, 238, 144, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(199, 255, 236, 1)',
+                        'rgba(144, 238, 144, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching chart data:', error);
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Ignore database, caches, and compiled files
+*.db
+__pycache__/
+*.pyc
+*.pkl
+.vs/
+*.log
+.DS_Store

@@ -1,0 +1,94 @@
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+/* General styles */
+body, html {
+    height: 100%;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: rgba(14, 13, 13, 0.8);
+    z-index: 10; /* Ensure the navbar has a higher z-index */
+    position: relative; 
+}
+
+.navbar-nav .nav-link {
+    font-size: 18px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f8d7da;
+}
+
+/* Hero Section */
+.hero {
+    background: url('/static/img/antique-cafe-bg-01.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    color: white;
+    font-weight: 600;
+}
+
+.hero p {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.form-inline input {
+    width: 300px;
+}
+
+/* Call-to-action button */
+.hero .btn {
+    font-size: 18px;
+    padding: 12px 24px;
+}
+
+.equipment-item {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.equipment-item img {
+    max-width: 100%; /* Ensure images are responsive */
+    height: 200px;   /* Set a fixed height to make them consistent */
+    object-fit: cover; /* Ensures the image covers the given height */
+}
+
+/* Recommendations Section */
+#recommendations {
+    padding: 50px 0;
+}
+
+#recommendations h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+.container {
+    z-index: 2;
+    position: relative;
+}
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+}
+
+footer p {
+    margin: 0;
+}

@@ -1,0 +1,101 @@
+<!-- edit_recommendation.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Full-page background */
+        body {
+            background-image: url("{{ url_for('static', filename='img/antique-cafe-bg-01.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        /* Centered container with improved styling */
+        .container {
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent for readability */
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%; /* Makes it responsive */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center; /* Centers the text and form fields */
+        }
+    
+        /* Form styling for better readability */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left; /* Aligns labels and inputs to the left */
+        }
+    
+        label {
+            font-weight: bold;
+        }
+    
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    
+        /* Link styling */
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #6c757d;
+        }
+    </style>
+    
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Recommendation</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-success">
+              {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('edit_recommendation', id=recommendation.id) }}" method="POST">
+            <div class="form-group">
+                <label for="antecedent">Antecedent</label>
+                <input type="text" id="antecedent" name="antecedent" class="form-control" 
+                       value="{{ recommendation.antecedent }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="consequent">Consequent</label>
+                <input type="text" id="consequent" name="consequent" class="form-control" 
+                       value="{{ recommendation.consequent }}" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

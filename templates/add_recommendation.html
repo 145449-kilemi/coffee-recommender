@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recommendation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('/static/img/antique-cafe-bg-01.jpg'); /* Correct path to the image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Add New Recommendation</h2>
+    <form action="{{ url_for('add_recommendation') }}" method="POST">
+        <div class="form-group">
+            <label for="antecedent">Antecedent (Item Name)</label>
+            <input type="text" class="form-control" id="antecedent" name="antecedent" required>
+        </div>
+        <div class="form-group">
+            <label for="consequent">Consequent (Recommended Item)</label>
+            <input type="text" class="form-control" id="consequent" name="consequent" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Recommendation</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

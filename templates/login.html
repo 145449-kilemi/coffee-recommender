@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Coffee Shop Recommendation System</title>
+    <link href="static/css/tailwind.css" rel="stylesheet" />
+    <link href="static/css/tooplate.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mx-auto px-4 py-24 sm:py-48">
+        <div class="max-w-md mx-auto bg-white bg-opacity-80 p-8 rounded-xl">
+            <h2 class="text-3xl mb-6 font-medium text-center text-green-600">Login</h2>
+
+            <!-- Display flash messages for invalid login -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="mb-4">
+                  {% for category, message in messages %}
+                    <div class="text-red-600">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700">Username:</label>
+                    <input type="text" id="username" name="username" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700">Password:</label>
+                    <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-md font-semibold hover:bg-green-700 transition">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

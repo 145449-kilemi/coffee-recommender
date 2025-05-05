@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Hero Background -->
+    <div class="hero" style="background: url('{{ url_for('static', filename='img/antique-cafe-bg-01.jpg') }}') no-repeat center center; background-size: cover; height: 100vh; position: relative;">
+        <!-- Adjusting overlay for interactivity -->
+        <div class="hero-overlay" style="background-color: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="z-index: 2; position: relative;">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Coffee Equipment Recommender</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('signin') }}">Sign In</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a></li>
+            </ul>
+        </nav>
+
+        <!-- Sign In Form Container -->
+        <div style="width: 100%; display: flex; justify-content: center; padding-top: 50px; position: relative; z-index: 2;">
+            <div style="width: 300px; padding: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 8px; text-align: center;">
+                <h1 style="font-size: 2em; margin-bottom: 20px;">Sign In</h1>
+                <form action="{{ url_for('signin') }}" method="POST">
+
+                    <div style="margin-bottom: 15px; text-align: left;">
+                        <label for="email" style="font-size: 1em; font-weight: bold;">Email:</label>
+                        <input type="email" id="email" name="email" style="width: 100%; padding: 12px; font-size: 16px; margin-top: 5px;" placeholder="Enter your email" required>
+                    </div>
+                    <div style="margin-bottom: 20px; text-align: left;">
+                        <label for="password" style="font-size: 1em; font-weight: bold;">Password:</label>
+                        <input type="password" id="password" name="password" style="width: 100%; padding: 12px; font-size: 16px; margin-top: 5px;" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" style="width: 100%; padding: 10px; font-size: 16px; background-color: #007bff; border: none; color: white; cursor: pointer;">Sign In</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>

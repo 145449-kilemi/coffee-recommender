@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendations for {{ item_name }}</title>
+    <style>
+        .recommendations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .recommendation-item {
+            width: calc(50% - 20px); /* Adjust width for two items per row */
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .recommendation-item img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Recommendations for  {{ item_name }}</h2>
+    <div class="recommendations">
+        {% for item in recommendations %}
+            <div class="recommendation-item">
+                <img src="{{ url_for('static', filename=item.image_path) }}" alt="{{ item.name }}">
+                <h3>{{ item.name }}</h3>
+                <p>Price: ${{ item.price }} USD</p>
+                <p>{{ item.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

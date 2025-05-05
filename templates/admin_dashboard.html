@@ -1,0 +1,264 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            background-color: #343a40;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+            text-decoration: none;
+        }
+        .content {
+            padding: 20px;
+        }
+        .header {
+            background-color: #6c757d;
+            padding: 10px;
+            color: white;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 sidebar">
+            <h3>Admin Dashboard</h3>
+            <a href="#user-management" onclick="showSection('user-management')">User Management</a>
+            <a href="#equipment-management" onclick="showSection('equipment-management')">Equipment Management</a>
+            <a href="#recommendation-management" onclick="showSection('recommendation-management')">Recommendation Management</a>
+            <a href="#analytics" onclick="showSection('analytics')">Analytics</a>
+            <a href="#settings" onclick="showSection('settings')">Settings</a>
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="col-md-10">
+            <div class="header">
+                <h2>Welcome, Admin</h2>
+            </div>
+            <div class="content">
+
+                <!-- User Management Section -->
+                <div id="user-management" class="section">
+                    <h3>User Management</h3>
+                    <a href="{{ url_for('add_user') }}" class="btn btn-primary mb-3">Add New User</a>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if users %}
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.role }}</td>
+                                        <td>
+                                            <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">No users found.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Equipment Management Section -->
+                <div id="equipment-management" class="section" style="display:none;">
+                    <h3>Equipment Management</h3>
+                    <a href="{{ url_for('add_equipment') }}" class="btn btn-primary mb-3">Add New Equipment</a>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if equipment %}
+                                {% for item in equipment %}
+                                    <tr>
+                                        <td>{{ item.Name }}</td>
+                                        <td>{{ item.category }}</td>
+                                        <td>${{ item.price }}</td>
+                                        <td>{{ item.stock_quantity }}</td>
+                                        <td>
+                                            <a href="{{ url_for('edit_equipment', equipment_id=item.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <form action="{{ url_for('delete_equipment', equipment_id=item.id) }}" method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5">No equipment found.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Recommendation Management Section -->
+  <!-- Recommendation Management Section --> 
+<!-- Recommendation Management Section --> 
+<div id="recommendation-management" class="section" style="display:none;">
+    <h3>Recommendation Management</h3>
+    <a href="{{ url_for('add_recommendation') }}" class="btn btn-primary mb-3">Add New Recommendation</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Antecedent</th>
+                <th>Consequent</th>
+                <th>Support</th>
+                <th>Confidence</th>
+                <th>Lift</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if association_rules %}
+                {% for rule in association_rules %}
+                    <tr>
+                        <td>{{ rule.antecedents | safe | replace("frozenset({'", "") | replace("'})", "") | replace("', '", ", ") }}</td>
+                        <td>{{ rule.consequents | safe | replace("frozenset({'", "") | replace("'})", "") | replace("', '", ", ") }}</td>
+                        <td>{{ rule.support }}</td>
+                        <td>{{ rule.confidence }}</td>
+                        <td>{{ rule.lift }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_recommendation', id=rule.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_recommendation', id=rule.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">No recommendations found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+        
+    </table>
+</div>
+
+
+
+                <!-- Analytics Section -->
+                <div id="analytics" class="section" style="display:none;">
+                    <h3>Analytics</h3>
+                    <div class="chart-container" style="width: 100%; height: 400px;">
+                        <canvas id="popularityChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-4" style="width: 100%; height: 400px;">
+                        <canvas id="recommendationFrequencyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings" class="section" style="display:none;">
+                    <h3>Settings</h3>
+                    <form>
+                        <label for="defaultCategory">Default Category:</label>
+                        <select id="defaultCategory" class="form-control mb-3">
+                            <option value="brewing">Coffee Brewing</option>
+                            <option value="grinding">Grinding Equipment</option>
+                            <option value="milk_and_steaming">Milk and Steaming Tools</option>
+                        </select>
+                        <button class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(function(section) {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    // Example popularity chart for analytics
+    const popularityCtx = document.getElementById('popularityChart').getContext('2d');
+    const popularityChart = new Chart(popularityCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Espresso Machine', 'Coffee Grinder', 'Milk Frother'],
+            datasets: [{
+                label: 'Popularity',
+                data: [50, 30, 20],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc']
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Recommendation frequency chart
+    const recommendationCtx = document.getElementById('recommendationFrequencyChart').getContext('2d');
+    const recommendationChart = new Chart(recommendationCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Espresso Machine', 'Coffee Grinder', 'Milk Frother'],
+            datasets: [{
+                label: 'Recommendation Frequency',
+                data: [60, 25, 15],
+                backgroundColor: ['#f6c23e', '#e74a3b', '#1cc88a']
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Coffee Equipment Recommender</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Coffee Equipment Recommender</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index')}}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('recommendations') }}">Recommendations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('signin') }}">Sign In</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Us Section -->
+    <section id="about" class="container py-5 mt-5">
+        <h2 class="text-center">About Us</h2>
+        <div class="text-center">
+            <p>Welcome to <strong>Coffee Equipment Recommender</strong>, your trusted source for personalized coffee shop equipment solutions. Our mission is to help coffee shop owners and enthusiasts alike find the perfect tools to enhance their coffee brewing experience, optimize their operations, and create a delightful experience for customers.</p>
+            <p>With a focus on both quality and functionality, we offer tailored recommendations based on your specific needs, whether you're setting up a small boutique café or upgrading your existing setup. Our system takes into consideration factors such as shop size, customer volume, and beverage preferences to suggest the best equipment, from high-end espresso machines to reliable grinders and milk frothers.</p>
+            <p>At <strong>Coffee Equipment Recommender</strong>, we believe that the right equipment makes all the difference in crafting exceptional coffee, and we are here to guide you every step of the way. Whether you're brewing strong espressos, mild lattes, or refreshing cold brews, we have the right recommendations to match your needs and budget.</p>
+            <p>Let us help you find the perfect tools to brew great coffee and deliver memorable experiences to your customers!</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2024 Coffee Equipment Recommender</p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
